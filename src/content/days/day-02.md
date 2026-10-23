@@ -5,5 +5,8 @@ slug: eye-gaze
 audio:
   src: /audio/day-02.mp3
   duration: "12:32"
-audioFirst: true
 ---
+
+Read the instructions in the calendar and when you are ready press play.
+
+**Length:** 13 minutes

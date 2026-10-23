@@ -15,7 +15,7 @@ The paths marked QR are printed in the calendar: never change them.
 | `/day-2` | Day 2 hatch: choose Day 2 or Day 9 (`choices` in `src/data/site.ts`) | QR |
 | `/eye-gaze` | Day 2 – Eye Gaze (old link `/copy-of-day-2` redirects) | |
 | `/goalsneeds` | Day 5 – Couple goals & needs | QR |
-| `/undress` | Day 6 | QR |
+| `/undress` | Day 6 – Undressing | QR |
 | `/growingcompassion` | Day 7 – Growing Compassion | QR |
 | `/sense-journey` | Day 9 – Sense Journey | |
 | `/nakedcuddle` | Day 10 – Naked Cuddling | QR |
@@ -43,7 +43,7 @@ Day pages come from `src/content/days/day-NN.md`; the URL is the `slug:` in the 
   appear automatically once added.
 - **URLs:** a day's URL is its `slug:` (or `/day-N` if none). Other old links can be forwarded in
   `public/_redirects` (`/old-path /new-path 301`).
-- **Pending pages:** `pending: true` shows "being prepared" (Day 6 for now).
+- **Pending pages:** `pending: true` shows "being prepared" instead of the text.
 
 `reference/` holds the screenshots of the old Wix site the pages were built from (not deployed).
 

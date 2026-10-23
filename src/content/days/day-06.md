@@ -1,7 +1,10 @@
 ---
 day: 6
-# Title guessed from the URL; replace with the real one.
-title: Undress
+# Title taken from the audio file name ("Undressing exercise"); replace with the real one.
+title: Undressing
 slug: undress
-pending: true
+audio:
+  src: /audio/day-06.mp3
+  duration: "20:03"
+audioFirst: true
 ---
