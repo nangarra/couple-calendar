@@ -8,8 +8,8 @@
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     "html_handling": "drop-trailing-slash",
-    // Only the API runs through the Worker; every page is served as a static file.
-    "run_worker_first": ["/api/*"]
+    // Only the API and audio run through the Worker; every page is served as a static file.
+    "run_worker_first": ["/api/*", "/audio/*"]
   },
   "d1_databases": [
     {

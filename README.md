@@ -19,6 +19,8 @@ that also stores heart ratings and feedback in a D1 database.
 - **Text:** edit the markdown in `src/content/days/`. Front matter sets the day number, title, audio and Spotify playlist.
 - **Audio:** drop the file into `public/audio/` with the name used in the day's front matter
   (e.g. `public/audio/day-01.mp3`). Until the file exists the player shows "Audio coming soon".
+  Use MP3 (plays in every browser; AAC/m4a doesn't). Convert with
+  `ffmpeg -i input.m4a -vn -c:a libmp3lame -b:a 128k public/audio/day-NN.mp3`. Max 25 MB per file on Cloudflare.
 - **Player position:** by default after the text; `audioFirst: true` puts it under the title;
   `<div data-audio></div>` in the text puts it exactly there (Day 9).
 - **Spotify (Day 15):** paste the playlist link into `spotify.url` in `day-15.md`.

@@ -1,5 +1,5 @@
 // Cloudflare Worker: stores heart ratings and feedback in D1.
-// Everything outside /api/* is served straight from the static assets.
+// Also adds byte-range support for /audio/*. Pages are served straight from the static assets.
 
 interface Env {
   ASSETS: Fetcher;
@@ -39,6 +39,28 @@ async function feedback(req: Request, env: Env) {
   return json({ ok: true });
 }
 
+// iOS Safari only plays audio served with byte ranges (206 Partial Content).
+// If the asset response ignores the Range header, slice the file here.
+async function audio(req: Request, env: Env) {
+  const res = await env.ASSETS.fetch(req);
+  const range = req.headers.get("range")?.match(/^bytes=(\d*)-(\d*)$/);
+  if (!range || res.status !== 200) return res;
+
+  const buf = await res.arrayBuffer();
+  const size = buf.byteLength;
+  let start = range[1] ? Number(range[1]) : size - Number(range[2]);
+  let end = range[1] && range[2] ? Number(range[2]) : size - 1;
+  start = Math.max(0, start);
+  end = Math.min(end, size - 1);
+  if (start > end) return new Response(null, { status: 416, headers: { "content-range": `bytes */${size}` } });
+
+  const headers = new Headers(res.headers);
+  headers.set("content-range", `bytes ${start}-${end}/${size}`);
+  headers.set("content-length", String(end - start + 1));
+  headers.set("accept-ranges", "bytes");
+  return new Response(buf.slice(start, end + 1), { status: 206, headers });
+}
+
 export default {
   async fetch(req, env) {
     const { pathname } = new URL(req.url);
@@ -46,6 +68,7 @@ export default {
     if (req.method === "POST" && pathname === "/api/rating") return rating(req, env);
     if (req.method === "POST" && pathname === "/api/feedback") return feedback(req, env);
     if (pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+    if (pathname.startsWith("/audio/")) return audio(req, env);
 
     return env.ASSETS.fetch(req);
   },
