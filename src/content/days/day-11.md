@@ -1,6 +1,7 @@
 ---
 day: 11
 title: Yab Yum Kissing meditation
+slug: yabyum
 audio:
   src: /audio/day-11.mp3
   duration: "09:14"

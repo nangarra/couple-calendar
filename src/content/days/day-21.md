@@ -1,6 +1,7 @@
 ---
 day: 21
 title: Intimate Questions
+slug: intimate
 ---
 
 Take a peaceful moment for yourself, prepare a cup of tea, pen & notebook and find a nice spot to sit in where you can be undisturbed for at least 30min-1h (take as much time as you need). Aim to be as honest as you can, to take it as an opportunity to know yourself deeper and better so that you can show up to the world and to your beloved more true to your heart!

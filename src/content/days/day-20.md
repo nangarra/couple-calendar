@@ -1,6 +1,7 @@
 ---
 day: 20
 title: Self-awareness
+slug: betterlover
 ---
 
 Self-knowledge and self-awareness is an essential key for deepening intimacy with somebody else!

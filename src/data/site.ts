@@ -7,11 +7,11 @@ export const site = {
 
 export const menu = [
   { label: "Home", href: "/" },
-  { label: "About Aurora", href: "/about" },
+  { label: "About Aurora", href: "/aurora" },
   { label: "Share your experience", href: "/feedback" },
 ];
 
 // Hatches whose QR code offers a choice between two days.
-export const choices = [{ slug: "day-2-or-9", days: [2, 9] }];
+export const choices = [{ slug: "day-2", days: [2, 9] }];
 
 export const daySlug = (d: { day: number; slug?: string }) => d.slug ?? `day-${d.day}`;

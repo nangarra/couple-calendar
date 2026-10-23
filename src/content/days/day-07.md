@@ -1,6 +1,7 @@
 ---
 day: 7
 title: Growing Compassion
+slug: growingcompassion
 audio:
   src: /audio/day-07.mp3
   duration: "08:43"

@@ -1,6 +1,7 @@
 ---
 day: 10
 title: Naked Cuddling
+slug: nakedcuddle
 audio:
   src: /audio/day-10.mp3
   duration: "02:39"

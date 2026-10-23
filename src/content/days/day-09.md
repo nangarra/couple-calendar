@@ -1,6 +1,7 @@
 ---
 day: 9
 title: Sense Journey
+slug: sense-journey
 audio:
   src: /audio/day-09.mp3
   duration: "30:32"

@@ -1,6 +1,7 @@
 ---
 day: 15
 title: Intimate Slow Dance
+slug: intimateslow
 spotify:
   title: Slowdance Moment - Couple Calendar
   # Paste the playlist link here, e.g. https://open.spotify.com/playlist/...

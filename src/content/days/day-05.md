@@ -1,6 +1,7 @@
 ---
 day: 5
 title: Couple goals & needs
+slug: goalsneeds
 ---
 
 Clarifying your goals as a couple helps you to keep the direction your heart wishes for, and this is an important practice to do on a regular basis.
