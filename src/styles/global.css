@@ -1,0 +1,318 @@
+:root {
+  --magenta: #8d1d7c;
+  --plum: #3d1047;
+  --header: #563a7c;
+  --header-dark: #3f2a62;
+  --footer: #250b45;
+  --cream: #f8e1bf;
+  --cream-soft: #e9cfb0;
+  --gold: #f5b301;
+  --white: #ffffff;
+  --card: rgb(52 12 62 / 0.62);
+  --card-line: rgb(248 225 191 / 0.12);
+  --radius: 32px;
+  --script: "Caveat", cursive;
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "Figtree", "Avenir Next", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  color: var(--cream);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--magenta);
+}
+
+/* Fixed background layer (background-attachment: fixed is ignored on iOS). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* Grainy magenta "watercolour paper", as on the original site. */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 15% 10%, #a82b92 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 60%, #9c2490 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 95%, #5e1569 0%, transparent 60%),
+    linear-gradient(160deg, #7d1a74, #8d1d7c 40%, #6a1670);
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 56px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+a {
+  color: var(--gold);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* The translucent purple panel every page sits on. */
+.panel {
+  position: relative;
+  padding: 36px 24px 40px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  box-shadow: 0 30px 60px -30px rgb(20 0 30 / 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.panel + .panel {
+  margin-top: 20px;
+}
+
+.kicker {
+  display: block;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--cream);
+}
+
+.title {
+  margin: 6px 0 22px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: clamp(2.3rem, 10vw, 3.2rem);
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 0 32px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--white);
+  color: #5b4bb5;
+  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 0.12), 0 12px 30px -10px rgb(160 140 255 / 0.8);
+  transition: transform 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+@media (min-width: 560px) {
+  .panel {
+    padding: 44px 40px 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Day text (rendered from markdown) ---------- */
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose p {
+  margin: 0 0 1.1em;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1.4em;
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin: 0.2em 0;
+  padding-left: 0.2em;
+}
+
+.prose ul li::marker {
+  color: var(--gold);
+}
+
+.prose ol li::marker {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.prose .center {
+  text-align: center;
+}
+
+.prose .section-title {
+  margin: 2.2em 0 0.6em;
+  text-align: center;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(1.45rem, 6vw, 1.85rem);
+  line-height: 1.25;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.prose .section-title + .center {
+  margin-top: -0.4em;
+}
+
+/* Sense headings on Day 9: icon + big title. */
+.prose .sense {
+  margin: 2.6em 0 1em;
+  text-align: center;
+}
+
+.prose .sense img {
+  display: block;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 10px;
+  padding: 16px;
+  border-radius: 50%;
+  background: rgb(248 225 191 / 0.08);
+  border: 1px solid rgb(248 225 191 / 0.18);
+}
+
+.prose .sense h3 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: var(--cream);
+}
+
+.prose .sense p {
+  margin: 4px 0 0;
+  color: var(--cream-soft);
+}
+
+.prose .illustration {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 2em auto 0;
+}
+
+/* Day 20 attribute list as chips. */
+.prose .traits ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 0;
+  margin: 1.4em 0 2em;
+}
+
+.prose .traits li {
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgb(248 225 191 / 0.1);
+  border: 1px solid rgb(248 225 191 / 0.25);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--cream);
+}
+
+/* Day 21 questions as numbered cards. */
+.prose .questions ol {
+  list-style: none;
+  counter-reset: q;
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 1.6em 0 0;
+}
+
+.prose .questions li {
+  counter-increment: q;
+  position: relative;
+  margin: 0;
+  padding: 16px 18px 16px 60px;
+  border-radius: 20px;
+  background: rgb(248 225 191 / 0.07);
+  border: 1px solid rgb(248 225 191 / 0.14);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.prose .questions li::before {
+  content: counter(q);
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #2a1640;
+  font-size: 0.95rem;
+  font-weight: 700;
+}

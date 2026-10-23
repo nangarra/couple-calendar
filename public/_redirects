@@ -1,0 +1,3 @@
+# Old QR-code URLs → new pages. Format:  /old-path  /new-path  301
+# Fill in once the Wix URLs are known, e.g.
+# /day-5-goalsneeds   /day-5   301

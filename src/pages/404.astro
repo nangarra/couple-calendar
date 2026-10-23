@@ -1,0 +1,22 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Page not found">
+  <section class="panel lost">
+    <span class="kicker">Oops</span>
+    <h1 class="title">This page could not be found</h1>
+    <p>Scan the QR-code inside the hatch again, or go back to the start.</p>
+    <a class="btn" href="/">Go to start</a>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    text-align: center;
+  }
+
+  .lost p {
+    margin: 0 0 28px;
+  }
+</style>

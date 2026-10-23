@@ -1,0 +1,52 @@
+---
+import { existsSync } from "node:fs";
+import Base from "../layouts/Base.astro";
+
+const photo = "/images/aurora.jpg";
+const hasPhoto = existsSync(`public${photo}`);
+---
+
+<Base title="This is Aurora">
+  <section class="panel" lang="sv">
+    <span class="kicker" lang="en">This is</span>
+    <h1 class="title">Aurora</h1>
+    {
+      hasPhoto ? (
+        <img class="portrait" src={photo} alt="Aurora Georgijevic" width="400" height="560" />
+      ) : (
+        <div class="portrait portrait-empty" aria-hidden="true">A</div>
+      )
+    }
+    <div class="prose">
+      <p>Aurora Georgijevic är en Sverigebaserad föreläsare med djup passion för kärlek.</p>
+      <p>Hon är en internationellt certifierad yoga- och tantralärare med över 18 års erfarenhet av undervisning på kurser, retreater, workshops och internationella evenemang.</p>
+      <p>Med entusiasm och glädje vill hon ge stöd, kunskap och inspiration för människor att våga öppna sig djupare för kärlek, intimitet och djupa relationer.</p>
+      <p>Hon tror att kärlek är den verkliga revolution som världen behöver, och att kärlek är en konst som alla som är villiga kan lära sig.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .portrait {
+    display: block;
+    width: 62%;
+    max-width: 280px;
+    height: auto;
+    aspect-ratio: 5 / 7;
+    object-fit: cover;
+    margin: 0 auto 28px;
+    border-radius: 24px;
+    border: 4px solid var(--white);
+    box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.6);
+    transform: rotate(-1.5deg);
+  }
+
+  .portrait-empty {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, #6b3f8f, #3d1047);
+    font-family: var(--serif);
+    font-size: 5rem;
+    color: var(--cream);
+  }
+</style>

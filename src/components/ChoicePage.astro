@@ -1,0 +1,55 @@
+---
+// A hatch whose QR code lets the couple choose between two days.
+import Base from "../layouts/Base.astro";
+import { daySlug } from "../data/site";
+
+interface Props {
+  options: { day: number; title: string; slug?: string }[];
+}
+
+const { options } = Astro.props;
+---
+
+
+<Base title={options.map((o) => `Day ${o.day}`).join(" or ")}>
+  {
+    options.map((o, i) => (
+      <>
+        {i > 0 && <p class="or">or</p>}
+        <a class="panel option" href={`/${daySlug(o)}`}>
+          <span class="kicker">Day {o.day}</span>
+          <h2 class="title">{o.title}</h2>
+          <span class="btn">Open day {o.day} here</span>
+        </a>
+      </>
+    ))
+  }
+</Base>
+
+<style>
+  .option {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+
+  .option:hover {
+    transform: translateY(-3px);
+  }
+
+  .option .title {
+    margin-bottom: 26px;
+  }
+
+  .or {
+    margin: 22px 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 2.2rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+</style>

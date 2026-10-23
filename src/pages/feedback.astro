@@ -1,0 +1,277 @@
+---
+import Base from "../layouts/Base.astro";
+
+const experience = ["Wonderful", "Great", "It was ok", "Not good"];
+const frequency = ["Every day", "Once-twice a week", "Once-twice a month", "Rarely"];
+// The Wix form's dropdown options weren't visible in the screenshots; adjust as needed.
+const areas = ["The exercises", "The audio guidance", "The website", "The physical calendar", "Other"];
+---
+
+<Base title="Share your experience">
+  <section class="panel">
+    <h1 class="title">Share your experience with us</h1>
+
+    <form id="feedback" novalidate>
+      <fieldset>
+        <legend>How was your whole experience with Couples Calendar?</legend>
+        <div class="choices">
+          {
+            experience.map((v) => (
+              <label class="choice">
+                <input type="radio" name="experience" value={v} />
+                <span>{v}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>How often do you use our calendar?</legend>
+        <div class="choices">
+          {
+            frequency.map((v) => (
+              <label class="choice">
+                <input type="radio" name="frequency" value={v} />
+                <span>{v}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Please rate your overall satisfaction with our product</legend>
+        <div class="hearts">
+          {
+            [1, 2, 3, 4, 5].map((n) => (
+              <label class="heart">
+                <input type="radio" name="satisfaction" value={n} aria-label={`${n} of 5`} />
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 20.5s-8.5-5.2-8.5-11A4.8 4.8 0 0 1 12 6.6a4.8 4.8 0 0 1 8.5 2.9c0 5.8-8.5 11-8.5 11z" />
+                </svg>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <label class="field">
+        <span>Where do we need to improve?</span>
+        <select name="improveArea">
+          <option value="">Choose an option</option>
+          {areas.map((a) => <option>{a}</option>)}
+        </select>
+      </label>
+
+      <label class="field">
+        <span>What can we do to improve?</span>
+        <textarea name="improveText" rows="4"></textarea>
+      </label>
+
+      <label class="field">
+        <span>Your email address <em aria-hidden="true">*</em></span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+
+      <p class="status" aria-live="polite"></p>
+      <button class="btn" type="submit">Submit</button>
+    </form>
+
+    <div class="done" hidden>
+      <p class="done-heart" aria-hidden="true">♥</p>
+      <p>Thank you for sharing your experience with us!</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById("feedback") as HTMLFormElement;
+  const status = form.querySelector<HTMLElement>(".status")!;
+  const submit = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+
+  // Fill hearts up to the chosen one.
+  const hearts = [...form.querySelectorAll<HTMLInputElement>("input[name=satisfaction]")];
+  hearts.forEach((h) =>
+    h.addEventListener("change", () =>
+      hearts.forEach((o) => o.parentElement!.classList.toggle("is-on", Number(o.value) <= Number(h.value))),
+    ),
+  );
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = form.elements.namedItem("email") as HTMLInputElement;
+    if (!email.checkValidity()) {
+      status.textContent = "Please enter a valid email address.";
+      email.focus();
+      return;
+    }
+
+    submit.disabled = true;
+    status.textContent = "Sending…";
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+      form.hidden = true;
+      form.nextElementSibling!.removeAttribute("hidden");
+    } catch (err) {
+      status.textContent = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      submit.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  form {
+    display: grid;
+    gap: 26px;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend,
+  .field > span {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: var(--white);
+  }
+
+  .field em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .choice input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .choice span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 8px 12px;
+    border-radius: 16px;
+    border: 1px solid rgb(248 225 191 / 0.22);
+    background: rgb(248 225 191 / 0.06);
+    text-align: center;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .choice input:checked + span {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #2a1640;
+    font-weight: 600;
+  }
+
+  .choice input:focus-visible + span {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  .hearts {
+    display: flex;
+    gap: 6px;
+  }
+
+  .heart {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .heart input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .heart svg {
+    display: block;
+    width: 44px;
+    height: 44px;
+    fill: #2a0f4f;
+    stroke: var(--cream-soft);
+    stroke-width: 1.2;
+    transition: fill 0.15s ease;
+  }
+
+  .heart:global(.is-on) svg {
+    fill: var(--gold);
+    stroke: var(--gold);
+  }
+
+  .heart input:focus-visible + svg {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  select,
+  textarea,
+  input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgb(248 225 191 / 0.22);
+    background: rgb(30 8 45 / 0.55);
+    color: var(--cream);
+    font: inherit;
+    font-weight: 400;
+  }
+
+  select option {
+    color: #222;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .status {
+    min-height: 1.5em;
+    margin: -10px 0 0;
+    text-align: center;
+    color: var(--gold);
+  }
+
+  .btn {
+    justify-self: center;
+    min-width: 200px;
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+  }
+
+  .done {
+    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  .done-heart {
+    margin: 0;
+    font-size: 3rem;
+    color: var(--gold);
+  }
+</style>

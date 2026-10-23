@@ -1,0 +1,118 @@
+---
+interface Props {
+  page: string;
+}
+
+const { page } = Astro.props;
+---
+
+<section class="rating" data-rating={page}>
+  <p class="prompt">Let us know what you think about this exercise!</p>
+  <div class="hearts" role="radiogroup" aria-label="Rate this exercise">
+    {
+      [1, 2, 3, 4, 5].map((n) => (
+        <button type="button" class="heart" role="radio" aria-checked="false" aria-label={`${n} of 5`} data-value={n}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20.5s-8.5-5.2-8.5-11A4.8 4.8 0 0 1 12 6.6a4.8 4.8 0 0 1 8.5 2.9c0 5.8-8.5 11-8.5 11z" />
+          </svg>
+        </button>
+      ))
+    }
+  </div>
+  <p class="thanks" aria-live="polite"></p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-rating]").forEach((el) => {
+    const page = el.dataset.rating!;
+    const key = `cc:rating:${page}`;
+    const hearts = [...el.querySelectorAll<HTMLButtonElement>(".heart")];
+    const thanks = el.querySelector<HTMLElement>(".thanks")!;
+
+    const show = (value: number) =>
+      hearts.forEach((h, i) => {
+        h.classList.toggle("is-on", i < value);
+        h.setAttribute("aria-checked", String(i + 1 === value));
+      });
+
+    let saved = 0;
+    try {
+      saved = Number(localStorage.getItem(key)) || 0;
+    } catch {}
+    if (saved) {
+      show(saved);
+      thanks.textContent = "Thank you for your rating ♥";
+    }
+
+    hearts.forEach((h) => {
+      const value = Number(h.dataset.value);
+      h.addEventListener("mouseenter", () => show(value));
+      h.addEventListener("mouseleave", () => show(saved));
+      h.addEventListener("click", async () => {
+        saved = value;
+        show(value);
+        thanks.textContent = "Thank you for your rating ♥";
+        try {
+          localStorage.setItem(key, String(value));
+        } catch {}
+        fetch("/api/rating", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ page, rating: value }),
+        }).catch(() => {});
+      });
+    });
+  });
+</script>
+
+<style>
+  .rating {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .prompt {
+    margin: 0 auto 14px;
+    max-width: 22ch;
+    font-size: 1.45rem;
+    line-height: 1.35;
+  }
+
+  .hearts {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .heart {
+    padding: 4px;
+    border: 0;
+    background: none;
+    transition: transform 0.15s ease;
+  }
+
+  .heart:hover {
+    transform: scale(1.12);
+  }
+
+  .heart svg {
+    display: block;
+    width: 40px;
+    height: 40px;
+    fill: #2a0f4f;
+    stroke: var(--cream-soft);
+    stroke-width: 1.2;
+    transition: fill 0.15s ease;
+  }
+
+  .heart.is-on svg {
+    fill: var(--gold);
+    stroke: var(--gold);
+  }
+
+  .thanks {
+    min-height: 1.6em;
+    margin: 8px 0 0;
+    font-size: 0.95rem;
+    color: var(--cream-soft);
+  }
+</style>

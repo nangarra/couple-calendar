@@ -1,0 +1,22 @@
+---
+// Every QR code lands on one of these: a day page, or a "choose a day" page.
+import { getCollection } from "astro:content";
+import DayPage from "../components/DayPage.astro";
+import ChoicePage from "../components/ChoicePage.astro";
+import { choices, daySlug } from "../data/site";
+
+export async function getStaticPaths() {
+  const days = await getCollection("days");
+  return [
+    ...days.map((entry) => ({ params: { slug: daySlug(entry.data) }, props: { entry } })),
+    ...choices.map((c) => ({
+      params: { slug: c.slug },
+      props: { options: c.days.map((n) => days.find((d) => d.data.day === n)!.data) },
+    })),
+  ];
+}
+
+const { entry, options } = Astro.props as any;
+---
+
+{entry ? <DayPage entry={entry} /> : <ChoicePage options={options} />}

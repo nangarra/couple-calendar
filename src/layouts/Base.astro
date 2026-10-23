@@ -1,0 +1,200 @@
+---
+import "../styles/global.css";
+import { site, menu } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = "Couples Calendar – Deeper Connection." } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : site.name;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <!-- Content is only for calendar owners; keep it out of search engines. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#563a7c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Figtree:wght@300;400;600;700&family=Playfair+Display:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/" class="logo">{site.name}</a>
+    </header>
+
+    <nav id="menu" class="menu" hidden>
+      <ul>
+        {menu.map((m) => <li><a href={m.href}>{m.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>{site.copyright}</p>
+      <p>{site.legal}</p>
+    </footer>
+
+    <a href="#" class="to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </body>
+</html>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>(".menu-btn")!;
+  const menu = document.getElementById("menu")!;
+  btn.addEventListener("click", () => {
+    const open = menu.hidden;
+    menu.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    btn.classList.toggle("is-open", open);
+  });
+
+  const toTop = document.querySelector<HTMLElement>(".to-top")!;
+  const onScroll = () => toTop.classList.toggle("is-visible", scrollY > 600);
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    align-items: center;
+    padding: calc(14px + env(safe-area-inset-top)) 16px 14px;
+    background: linear-gradient(180deg, rgb(86 58 124 / 0.92), rgb(63 42 98 / 0.92));
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid rgb(248 225 191 / 0.1);
+  }
+
+  .logo {
+    grid-column: 2;
+    justify-self: center;
+    font-family: var(--script);
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    line-height: 1;
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .menu-btn {
+    display: grid;
+    gap: 6px;
+    width: 44px;
+    height: 44px;
+    padding: 10px 6px;
+    border: 0;
+    background: none;
+  }
+
+  .menu-btn span {
+    display: block;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--gold);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .menu-btn.is-open span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .menu-btn.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-btn.is-open span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  .menu {
+    position: fixed;
+    inset: 72px 12px auto;
+    z-index: 19;
+    padding: 12px;
+    border-radius: 24px;
+    background: rgb(45 20 75 / 0.96);
+    border: 1px solid rgb(248 225 191 / 0.14);
+    box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.6);
+  }
+
+  .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu a {
+    display: block;
+    padding: 14px 18px;
+    border-radius: 16px;
+    color: var(--cream);
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    text-decoration: none;
+  }
+
+  .menu a:hover {
+    background: rgb(248 225 191 / 0.08);
+  }
+
+  .site-footer {
+    padding: 36px 24px calc(40px + env(safe-area-inset-bottom));
+    background: var(--footer);
+    text-align: center;
+    font-size: 0.95rem;
+    color: rgb(248 225 191 / 0.75);
+  }
+
+  .site-footer p {
+    max-width: 520px;
+    margin: 0 auto 6px;
+  }
+
+  .to-top {
+    position: fixed;
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.92);
+    color: var(--header-dark);
+    box-shadow: 0 10px 24px -8px rgb(0 0 0 / 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .to-top:global(.is-visible) {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+</style>

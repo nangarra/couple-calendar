@@ -1,0 +1,35 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base>
+  <section class="panel home">
+    <img class="hero-art" src="/images/couple-lineart.png" alt="Line drawing of a couple embracing" width="281" height="423" />
+    <span class="kicker">Couples Calendar</span>
+    <h1 class="title">Deeper Connection</h1>
+    <div class="prose">
+      <p>Welcome to the Couples Calendar experience. This content is only available through QR-codes from the physical Calendar.</p>
+      <p><strong class="hl">If you have a calendar,</strong> you can access this content using the QR-code inside each hatch.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-art {
+    display: block;
+    width: 58%;
+    max-width: 240px;
+    height: auto;
+    margin: 0 auto 18px;
+    filter: drop-shadow(0 6px 24px rgb(245 179 1 / 0.15));
+  }
+
+  .home .prose {
+    font-size: 1.25rem;
+  }
+
+  .hl {
+    font-weight: 700;
+    color: var(--cream);
+  }
+</style>

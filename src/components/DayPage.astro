@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Base from "../layouts/Base.astro";
+import AudioPlayer from "./AudioPlayer.astro";
+import HeartRating from "./HeartRating.astro";
+import SpotifyCard from "./SpotifyCard.astro";
+import { daySlug } from "../data/site";
+
+interface Props {
+  entry: CollectionEntry<"days">;
+}
+
+const { entry } = Astro.props;
+const { day, title, audio, audioFirst, spotify, rating, pending } = entry.data;
+const slug = daySlug(entry.data);
+
+// The player goes where the text has <div data-audio></div>, else after the text.
+const MARKER = "<div data-audio></div>";
+const html = entry.rendered?.html ?? "";
+const [before, after] = html.includes(MARKER) ? html.split(MARKER) : [html, ""];
+const playerAt = !audio ? null : audioFirst ? "top" : html.includes(MARKER) ? "marker" : "end";
+---
+
+
+<Base title={`Day ${day} – ${title}`}>
+  <article class="panel">
+    <span class="kicker">Day {day}</span>
+    <h1 class="title">{title}</h1>
+
+    {playerAt === "top" && <AudioPlayer src={audio!.src} title={audio!.title ?? title} duration={audio!.duration} />}
+
+    {
+      pending ? (
+        <p class="pending">This exercise is being prepared and will be here soon.</p>
+      ) : (
+        <div class="prose">
+          <Fragment set:html={before} />
+          {playerAt === "marker" && <AudioPlayer src={audio!.src} title={audio!.title ?? title} duration={audio!.duration} />}
+          <Fragment set:html={after} />
+        </div>
+      )
+    }
+
+    {playerAt === "end" && <AudioPlayer src={audio!.src} title={audio!.title ?? title} duration={audio!.duration} />}
+    {spotify && <SpotifyCard title={spotify.title} url={spotify.url} />}
+    {rating && !pending && <HeartRating page={slug} />}
+  </article>
+</Base>
+
+<style>
+  .pending {
+    text-align: center;
+    color: var(--cream-soft);
+  }
+</style>
