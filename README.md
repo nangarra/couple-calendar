@@ -57,15 +57,20 @@ npm run preview   # build + local Cloudflare Worker + local D1 at http://localho
 
 ## Deploy to Cloudflare
 
-```sh
-npx wrangler login
-npx wrangler d1 create couple-calendar           # copy the database_id into wrangler.jsonc
-npx wrangler d1 migrations apply couple-calendar --remote
-npm run deploy
-```
+The site deploys from GitHub with Cloudflare Workers Builds:
 
-Then in the Cloudflare dashboard: Worker → Settings → Domains & Routes → add `couplecalendar.online`
-and `www.couplecalendar.online` (the domain's DNS must be on Cloudflare).
+1. Cloudflare dashboard → **Workers & Pages → Create → Import a repository** → `nangarra/couple-calendar`.
+2. Project name `couple-calendar` (must match `name` in `wrangler.jsonc`), build command `npm run build`,
+   deploy command `npx wrangler deploy`.
+3. Every push to `main` deploys automatically.
+
+The D1 database `couple-calendar` (id in `wrangler.jsonc`) needs no setup: the Worker creates its tables on
+first use. `migrations/0001_init.sql` holds the same schema for local dev.
+
+Custom domain: Worker → Settings → Domains & Routes → add `couplecalendar.online` and
+`www.couplecalendar.online` (the domain's DNS must be on Cloudflare).
+
+Manual deploy from a computer instead: `npx wrangler login && npm run deploy`.
 
 ## Reading ratings and feedback
 

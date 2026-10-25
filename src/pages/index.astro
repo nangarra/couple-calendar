@@ -11,6 +11,7 @@ import Base from "../layouts/Base.astro";
       <p>Welcome to the Couples Calendar experience. This content is only available through QR-codes from the physical Calendar.</p>
       <p><strong class="hl">If you have a calendar,</strong> you can access this content using the QR-code inside each hatch.</p>
     </div>
+    <video class="welcome-video" src="/video/welcome.mp4" poster="/video/welcome-poster.jpg" width="720" height="1280" controls playsinline preload="metadata"></video>
   </section>
 </Base>
 
@@ -26,6 +27,19 @@ import Base from "../layouts/Base.astro";
 
   .home .prose {
     font-size: 1.25rem;
+  }
+
+  .welcome-video {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    margin: 8px auto 0;
+    border-radius: 24px;
+    background: #1f0f33;
+    box-shadow:
+      0 0 0 2px rgb(248 225 191 / 0.2),
+      0 24px 50px -20px rgb(0 0 0 / 0.6);
   }
 
   .hl {

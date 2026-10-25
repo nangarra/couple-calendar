@@ -4,8 +4,7 @@ title: Intimate Slow Dance
 slug: intimateslow
 spotify:
   title: Slowdance Moment - Couple Calendar
-  # Paste the playlist link here, e.g. https://open.spotify.com/playlist/...
-  url: ""
+  url: https://open.spotify.com/playlist/0ooyz6QmA2od41TmESGBo0
 ---
 
 Few things can feel as sweet and intimate as a slow dance with your beloved 😊

@@ -15,8 +15,7 @@
     {
       "binding": "DB",
       "database_name": "couple-calendar",
-      // Replace with the id printed by `npx wrangler d1 create couple-calendar`.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "6611248d-6744-48cd-92cd-6eb359f02b5d",
       "migrations_dir": "migrations"
     }
   ]

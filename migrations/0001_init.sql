@@ -1,5 +1,5 @@
 -- Heart ratings left on each day's page.
-CREATE TABLE ratings (
+CREATE TABLE IF NOT EXISTS ratings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   page TEXT NOT NULL,
   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
@@ -7,7 +7,7 @@ CREATE TABLE ratings (
 );
 
 -- Answers from the "Share your experience" form.
-CREATE TABLE feedback (
+CREATE TABLE IF NOT EXISTS feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   experience TEXT,
   frequency TEXT,

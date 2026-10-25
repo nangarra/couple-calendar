@@ -16,12 +16,45 @@ const stars = (v: unknown) => {
   return Number.isInteger(n) && n >= 1 && n <= 5 ? n : null;
 };
 
+// Create the tables on first use, so a fresh D1 database needs no manual setup.
+// Keep in sync with migrations/0001_init.sql.
+let schemaReady: Promise<unknown> | undefined;
+const ensureSchema = (db: D1Database) =>
+  (schemaReady ??= db
+    .batch([
+      db.prepare(
+        `CREATE TABLE IF NOT EXISTS ratings (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          page TEXT NOT NULL,
+          rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+          created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        )`,
+      ),
+      db.prepare(
+        `CREATE TABLE IF NOT EXISTS feedback (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          experience TEXT,
+          frequency TEXT,
+          satisfaction INTEGER CHECK (satisfaction BETWEEN 1 AND 5),
+          improve_area TEXT,
+          improve_text TEXT,
+          email TEXT NOT NULL,
+          created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        )`,
+      ),
+    ])
+    .catch((err) => {
+      schemaReady = undefined;
+      throw err;
+    }));
+
 async function rating(req: Request, env: Env) {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const page = text(body.page, 100);
   const value = stars(body.rating);
   if (!page || !value) return json({ error: "Invalid rating" }, 400);
 
+  await ensureSchema(env.DB);
   await env.DB.prepare("INSERT INTO ratings (page, rating) VALUES (?, ?)").bind(page, value).run();
   return json({ ok: true });
 }
@@ -31,6 +64,7 @@ async function feedback(req: Request, env: Env) {
   const email = text(body.email, 200);
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: "Please enter a valid email address." }, 400);
 
+  await ensureSchema(env.DB);
   await env.DB.prepare(
     "INSERT INTO feedback (experience, frequency, satisfaction, improve_area, improve_text, email) VALUES (?, ?, ?, ?, ?, ?)",
   )
