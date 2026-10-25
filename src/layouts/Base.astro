@@ -1,6 +1,11 @@
 ---
 import "../styles/global.css";
-import { site, menu } from "../data/site";
+import { getCollection } from "astro:content";
+import { site, menu, daySlug } from "../data/site";
+
+const days = (await getCollection("days")).map((d) => d.data).sort((a, b) => a.day - b.day);
+const [home, ...otherLinks] = menu;
+const current = Astro.url.pathname.replace(/\.html$/, "");
 
 interface Props {
   title?: string;
@@ -38,9 +43,24 @@ const pageTitle = title ? `${title} · ${site.name}` : site.name;
     </header>
 
     <nav id="menu" class="menu" hidden>
-      <ul>
-        {menu.map((m) => <li><a href={m.href}>{m.label}</a></li>)}
+      <a class="menu-link" href={home.href} aria-current={current === home.href ? "page" : undefined}>{home.label}</a>
+      <p class="menu-heading">All days</p>
+      <ul class="menu-days">
+        {
+          days.map((d) => {
+            const href = `/${daySlug(d)}`;
+            return (
+              <li>
+                <a href={href} aria-current={current === href ? "page" : undefined}>
+                  <span class="menu-day-num">{d.day}</span>
+                  <span class="menu-day-title">{d.title}</span>
+                </a>
+              </li>
+            );
+          })
+        }
       </ul>
+      {otherLinks.map((m) => <a class="menu-link" href={m.href} aria-current={current === m.href ? "page" : undefined}>{m.label}</a>)}
     </nav>
 
     <main>
@@ -133,31 +153,80 @@ const pageTitle = title ? `${title} · ${site.name}` : site.name;
     position: fixed;
     inset: 72px 12px auto;
     z-index: 19;
+    max-width: 560px;
+    max-height: calc(100dvh - 92px);
+    margin: 0 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 12px;
     border-radius: 24px;
-    background: rgb(45 20 75 / 0.96);
+    background: rgb(45 20 75 / 0.97);
     border: 1px solid rgb(248 225 191 / 0.14);
     box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.6);
   }
 
-  .menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
   .menu a {
-    display: block;
-    padding: 14px 18px;
-    border-radius: 16px;
     color: var(--cream);
-    font-family: var(--serif);
-    font-size: 1.35rem;
     text-decoration: none;
   }
 
-  .menu a:hover {
-    background: rgb(248 225 191 / 0.08);
+  .menu a:hover,
+  .menu a[aria-current="page"] {
+    background: rgb(248 225 191 / 0.1);
+  }
+
+  .menu-link {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+  }
+
+  .menu-heading {
+    margin: 10px 16px 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .menu-days {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+
+  .menu-days a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 12px;
+    border-radius: 14px;
+  }
+
+  .menu-day-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgb(245 179 1 / 0.6);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .menu a[aria-current="page"] .menu-day-num {
+    background: var(--gold);
+    color: #2a1640;
+  }
+
+  .menu-day-title {
+    font-size: 1.05rem;
+    line-height: 1.3;
   }
 
   .site-footer {
